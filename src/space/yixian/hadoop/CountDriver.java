@@ -20,8 +20,8 @@ public class CountDriver extends Configured implements Tool{
 		
 		Job job = Job.getInstance(configuration);
 		
-		job.setMapperClass(CountMapper1.class);
-		job.setReducerClass(CountReducer1.class);
+		job.setMapperClass(CountEachMovieMapper1.class);
+		job.setReducerClass(CountEachMovieReducer1.class);
 		
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(Text.class);

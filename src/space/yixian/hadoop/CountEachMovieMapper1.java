@@ -4,7 +4,12 @@ import java.io.IOException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class CountMapper1 extends Mapper<Object, Object, Text, Text> {
+/**
+ * count the frequence of movie
+ * @author may
+ *
+ */
+public class CountEachMovieMapper1 extends Mapper<Object, Object, Text, Text> {
 	
 	//input : userid movieid rate time
 	@Override
