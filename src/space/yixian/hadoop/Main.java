@@ -32,7 +32,7 @@ public class Main {
 //			int res = ToolRunner.run(new Configuration(), new CountDriver(), address);
 //			System.exit(res);
 //			
-		presenceSort(folderAddr+"job1/part-r-00000");
+		//presenceSort(folderAddr+"job1/part-r-00000");
 							
 			
 			
