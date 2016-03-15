@@ -19,6 +19,7 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.util.ToolRunner;
 
 
 public class Main {
@@ -30,13 +31,15 @@ public class Main {
 			String HDFSAddr = "hdfs://localhost:8020/";
 			String folderAddr = HDFSAddr + "FP/";
 			
-			String[] address = {HDFSAddr+"u.data",folderAddr+"job1"};		
+//			String[] address = {HDFSAddr+"u.data",folderAddr+"job1"};		
 //			int res = ToolRunner.run(new Configuration(), new CountDriver(), address);
 //			System.exit(res);
 //			
-			presenceSort(folderAddr+"job1/par*");
-							
-			
+			//presenceSort(folderAddr+"job1/par*");
+
+			String[] address = {HDFSAddr+"u.data",folderAddr+"job2"};		
+			int res = ToolRunner.run(new Configuration(), new TransactionsDriver(), address);
+
 			
 	}
 	
