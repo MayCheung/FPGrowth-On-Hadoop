@@ -30,12 +30,17 @@ public class FrequentPatternMapper2 extends Mapper<Object, Object, Text, Text>{
 	static{
 		Configuration configuration = new Configuration();
 		configuration.set("fs.defalutFS","hdfs://localhost:8020");
-		FileSystem fileSystem = FileSystem.get(configuration);
+		FileSystem fileSystem = null;
+		try {
+			fileSystem = FileSystem.get(configuration);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		BufferedReader reader = null;
 		
 		try {
 					
-			FSDataInputStream inputStream = fileSystem.open(new Path(inputAddr));
+			FSDataInputStream inputStream = fileSystem.open(new Path("hdfs://localhost:8020/FP/job1/part-r-00000"));
 			reader = new BufferedReader(new InputStreamReader(inputStream));	
 			 			 
 			HashMap< String, Integer > map = new HashMap<>();

@@ -16,8 +16,10 @@ import java.util.Map.Entry;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+
 
 public class Main {
 	
@@ -32,7 +34,7 @@ public class Main {
 //			int res = ToolRunner.run(new Configuration(), new CountDriver(), address);
 //			System.exit(res);
 //			
-		//presenceSort(folderAddr+"job1/part-r-00000");
+			presenceSort(folderAddr+"job1/par*");
 							
 			
 			
@@ -45,32 +47,49 @@ public class Main {
 	static void presenceSort(String inputAddr) throws IOException {
 		
 		Configuration configuration = new Configuration();
+		configuration.setBoolean("dfs.support.append", true);
 		configuration.set("fs.defalutFS","hdfs://localhost:8020");
 		FileSystem fileSystem = FileSystem.get(configuration);
+
 		BufferedReader reader = null;
 		BufferedWriter writer = null;
-		try {
-					
-			//Path dstDir = new Path("hdfs://localhost:8020/u.data");  
-			//FileSystem hdfs = dstDir.getFileSystem(configuration);  
-
-			FSDataInputStream inputStream = fileSystem.open(new Path(inputAddr));
-			reader = new BufferedReader(new InputStreamReader(inputStream));	
-			 
-			FSDataOutputStream outputStream = fileSystem.create(new Path("hdfs://localhost:8020/FP/sort"));
-			writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-			
-			 
-			HashMap< String, Integer > map = new HashMap<>();
-			
-			String aLine;
-			while(( aLine = reader.readLine()) != null){
+		
+		FileStatus[] status = fileSystem.globStatus(new Path(inputAddr));
+		HashMap< String, Integer > map = new HashMap<>();
+		
+		
+		for(FileStatus fileStatus : status){
+	
+			try {
 				
-				String[] split = aLine.split("\t");
-				map.put(split[0], Integer.valueOf(split[1]));
+				FSDataInputStream inputStream = fileSystem.open(fileStatus.getPath());
+				reader = new BufferedReader(new InputStreamReader(inputStream));									 
+			
+				String aLine;
+				while(( aLine = reader.readLine()) != null){
+					
+					String[] split = aLine.split("\t");
+					map.put(split[0], Integer.valueOf(split[1]));
 
+				}	
+							
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
-
+		}
+		
+		
+		
+		if(map!=null){
 			ArrayList< Map.Entry<String, Integer> > list = new ArrayList< Map.Entry<String, Integer>>(map.entrySet());
 			
 			Collections.sort( list,new Comparator<Map.Entry<String, Integer>>() {
@@ -81,26 +100,32 @@ public class Main {
 				}
 			} );
 			
-			
-			for(Integer i = 0 ; i < list.size(); i++){
-				String line = i.toString() + "\t" + list.get(i).getKey() + "\t" + list.get(i).getValue() + "\n";
-				writer.write(line);
-			}
-			
-			
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
+			Path appFilePath = new Path("hdfs://localhost:8020/FP/sort");
+			FSDataOutputStream outputStream = null;
 			try {
-				writer.close();
-				reader.close();
-			} catch (IOException e) {
+					if(fileSystem.exists(appFilePath)) {
+						outputStream = fileSystem.append(appFilePath);
+					}else{
+						outputStream = fileSystem.create(appFilePath);
+					}
+				writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+				for(Integer i = 0 ; i < list.size(); i++){
+					String line = i.toString() + "\t" + list.get(i).getKey() + "\t" + list.get(i).getValue() + "\n";
+					writer.write(line);
+				}
+			}
+			catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}finally {
+				
+				try {
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			
 		}
 		
 	}
