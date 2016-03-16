@@ -1,6 +1,8 @@
 package space.yixian.hadoop;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -16,7 +18,7 @@ public class TransactionsReducer2 extends Reducer<Text, Text, Text, Text> {
 	protected void reduce(Text key, Iterable<Text> values, Reducer<Text, Text, Text, Text>.Context context)
 			throws IOException, InterruptedException {
 			
-		TreeMap<Integer, String> map = new TreeMap<>();
+		TreeMap<Integer, String> map = new TreeMap<Integer,String>();
 		
 		for(Text value : values){
 			String movie = value.toString().split(",")[0];
@@ -26,10 +28,34 @@ public class TransactionsReducer2 extends Reducer<Text, Text, Text, Text> {
 		}
 		
 		
+		ArrayList<String> arrayList = new ArrayList<>();
 		for(Map.Entry<Integer, String> entry : map.entrySet()){
-						
-			context.write(new Text(entry.getValue()), new Text((entry.getKey()).toString()) );
+			
+			arrayList.add(entry.getValue()); // movie 
+			//context.write(new Text(entry.getValue()), new Text((entry.getKey()).toString()) ); //movie rank
 		}
+		
+	
+
+			String valueStr = null;
+			for(int i = arrayList.size()-1 ; i > 0; i--){
+
+				for (int j = i - 1 ; j >= 0; j--){
+					
+					if(valueStr == null) {
+						valueStr = arrayList.get(j);
+					}else{
+						valueStr += "," + arrayList.get(j);
+					}
+					
+				}
+				
+				
+				context.write(new Text(arrayList.get(i)), new Text(valueStr));
+				
+			}
+		
+		
 		
 		
 	}

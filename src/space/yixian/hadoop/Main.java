@@ -40,7 +40,7 @@ public class Main {
 			String[] address = {HDFSAddr+"u.data",folderAddr+"job2"};		
 			int res = ToolRunner.run(new Configuration(), new TransactionsDriver(), address);
 
-			
+			  
 	}
 	
 	

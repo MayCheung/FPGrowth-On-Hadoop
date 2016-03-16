@@ -109,7 +109,7 @@ public class TransactionsMapper2 extends Mapper<Object, Object, Text, Text>{
 		if(movRankMap.containsKey(movie)){ // infrequent items eliminated
 			
 			String rank = movRankMap.get(movie);
-			context.write(new Text(user), new Text(movie+"-"+rank));
+			context.write(new Text(user), new Text(movie+","+rank));
 			
 		}
 		
