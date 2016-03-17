@@ -34,6 +34,7 @@ public class Main {
 			//String LocalAddr = "/home/may/app/";
 			//String folderAddr = LocalAddr + "FP/";
 			
+			
 			String[] address = {HDFSAddr+"u.data",folderAddr+"job1"};		
 			int res = ToolRunner.run(new Configuration(), new CountDriver(), address);
 			

@@ -18,7 +18,38 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-
+/**
+ * 
+ * 1.sort and rank the output of Mapper1
+ * 2.sort the rated movie of one user by the frequency 
+ * 
+ * @author may
+ * 
+ * e.g.:
+ * in Reducer1's result:
+ * <f,4> <a,3> <c,4> <m,3> <p,3> <b,3>
+ * 
+ * 1.sort the output of Mapper1 in descending order:
+ * <f,4> <c,4> <a,3> <m,3> <p,3> <b,3>
+ * rank them: <f,0> <a,1> <c,2> <m,3> <p,4> <b,5> -- <f,a,c,m,p,b>
+ * 
+ * 2.sort the rated movie of one user according to the order of step1.'s result 
+ *  	2.1. Mapper2: read a line of dataset, if the movie is frequent, output:<user, (movie,rank)>
+ *  	2.2. Reducer2: sort the rated movie of one user and get conditional transactions	
+ * 
+ * 		e.g.: 	a f c e l p m n -- user5	
+ * 			2.1. 
+ * 			according to rank<f,a,c,m,p,b>, eliminate the infrequent item <d,g,i>, get: <a,f,c,p,m>
+ * 		    set <a,f,c,p,m> in Mapper2 output in format <user, (movie,rank)>:
+ * 				<user5, (a,1)> <user5, (f,0)> <user5, (c,2)> <user5, (p,4)> <user5, (m,3)>
+ * 			2.2.
+ * 			sort <a,f,c,p,m> according to the rank sequence <f,a,c,m,p,b>, get <f,a,c,m,p> ( namely sorted transactions )
+ * 			get conditional transactions of <f,a,c,m,p>: 
+ * 				p: f,a,c,m
+ * 				m: f,a,c
+ * 				c: f,a
+ * 				a: f
+ */
 public class TransactionsMapper2 extends Mapper<Object, Object, Text, Text>{
 	
 	private static HashMap<String, String> movRankMap = new HashMap<String,String>();
