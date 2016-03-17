@@ -35,6 +35,7 @@ public class TransactionsMapper2 extends Mapper<Object, Object, Text, Text>{
 		FileStatus[] status = null; 
 		
 		String addr = "hdfs://localhost:8020/FP/job1/part-r-*";
+	//	String addr = "/home/may/app/part-r-*";
 		
 		try {
 			fileSystem = FileSystem.get(configuration);

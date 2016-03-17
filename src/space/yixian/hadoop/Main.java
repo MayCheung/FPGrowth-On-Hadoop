@@ -31,15 +31,23 @@ public class Main {
 			String HDFSAddr = "hdfs://localhost:8020/";
 			String folderAddr = HDFSAddr + "FP/";
 			
-//			String[] address = {HDFSAddr+"u.data",folderAddr+"job1"};		
-//			int res = ToolRunner.run(new Configuration(), new CountDriver(), address);
-//			System.exit(res);
-//			
+			//String LocalAddr = "/home/may/app/";
+			//String folderAddr = LocalAddr + "FP/";
+			
+			String[] address = {HDFSAddr+"u.data",folderAddr+"job1"};		
+			int res = ToolRunner.run(new Configuration(), new CountDriver(), address);
+			
+			
 			//presenceSort(folderAddr+"job1/par*");
 
-			String[] address = {HDFSAddr+"u.data",folderAddr+"job2"};		
-			int res = ToolRunner.run(new Configuration(), new TransactionsDriver(), address);
-
+			
+			
+			String[] address1 = {HDFSAddr+"u.data",folderAddr+"job2"};		
+			res = ToolRunner.run(new Configuration(), new TransactionsDriver(), address1);
+			
+			
+			String[] address2 = {folderAddr+"job2/p*",folderAddr+"job3"};		
+			res = ToolRunner.run(new Configuration(), new FrequentPatternDriver(), address2);
 			  
 	}
 	

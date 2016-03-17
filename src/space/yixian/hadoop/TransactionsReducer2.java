@@ -32,14 +32,14 @@ public class TransactionsReducer2 extends Reducer<Text, Text, Text, Text> {
 		for(Map.Entry<Integer, String> entry : map.entrySet()){
 			
 			arrayList.add(entry.getValue()); // movie 
-			//context.write(new Text(entry.getValue()), new Text((entry.getKey()).toString()) ); //movie rank
+			
 		}
 		
-	
-
-			String valueStr = null;
+	  
+			
 			for(int i = arrayList.size()-1 ; i > 0; i--){
 
+				String valueStr = null;
 				for (int j = i - 1 ; j >= 0; j--){
 					
 					if(valueStr == null) {
@@ -50,7 +50,7 @@ public class TransactionsReducer2 extends Reducer<Text, Text, Text, Text> {
 					
 				}
 				
-				
+				System.out.println(arrayList.get(i) + ":" + valueStr);
 				context.write(new Text(arrayList.get(i)), new Text(valueStr));
 				
 			}
